@@ -1,5 +1,6 @@
 import React from 'react';
-import {Container, Grid, Paper, CssBaseline, Chip, Avatar} from '@material-ui/core';
+import {Container, Grid, Paper, CssBaseline, Chip, Avatar, Card, CardHeader, 
+  CardMedia, CardContent, Typography} from '@material-ui/core';
 import { HomeOutlined, HighlightOffOutlined } from '@material-ui/icons'
 import { makeStyles } from '@material-ui/core/styles';
 import Navbar from './components/Navbar';
@@ -31,9 +32,11 @@ const useStyles = makeStyles((theme) => ({
       margin: theme.spacing(0.5),
     }
   },
-  avatar: {
-    width: "56px",
-    height: "56px",
+  media: {
+    height: 140
+  },
+  card: {
+    maxWidth: "356px",
   }
 }));
 
@@ -52,14 +55,18 @@ export default function App() {
       <Navbar user={user} updateUser={handleUser}/>
       <Grid container className={classes.container} spacing={1}>
         <Grid item ><Paper className={classes.sidebar}>
-          <Chip 
-            avatar={<Avatar className={classes.avatar} alt="optional picture" src={MyImage}/>} 
-            label="Old Hive in the back yard"
-            clickable
-            color="primary"
-            deleteIcon={<HighlightOffOutlined/>} 
-            onDelete={handleItemDelete}
-            style={{height: "56px", width: "260px"}}/>
+          <Card className={classes.card}>
+            <CardHeader 
+              avatar={<Avatar>R</Avatar>} 
+              title="Old Hive in the back yard"/>
+            <CardMedia className={classes.media} title="optional picture" image={MyImage}/>
+            <CardContent>
+              <Typography variant="body2" color="textSecondary" component="p">
+                This impressive paella is a perfect party dish and a fun meal to cook together with your
+                guests. Add 1 cup of frozen peas along with the mussels, if you like.
+              </Typography>
+            </CardContent>
+          </Card>
           <Chip 
             icon={<HomeOutlined />} 
             label="New Hive #1 in the front"
