@@ -21,13 +21,14 @@ const useStyles = makeStyles((theme) => ({
   mainPaper: {
     height: "100%"
   },
-  control: {
-    padding: theme.spacing(2),
-  },
   sidebar: {
     display: "flex",
     flexDirection: "column",
-    height: "100%"
+    padding: 10,
+    height: "100%",
+    '& > *': {
+      margin: theme.spacing(0.5),
+    }
   },
 }));
 
@@ -35,41 +36,38 @@ export default function App() {
   const [user, setUser] = React.useState({ id:"Guest" });
   const classes = useStyles();
   const handleUser = () => {};
+  
+  const handleItemDelete = () => {
+    console.info('You clicked the delete icon.');
+  };
 
   return (
     <Container component="main" maxWidth="lg" className={classes.rootContainer}>
       <CssBaseline />
       <Navbar user={user} updateUser={handleUser}/>
-      {/*
-      <section>Section field
-        <aside>Aside field</aside>
-      </section>
-      */}
       <Grid container className={classes.container} spacing={1}>
-        <Grid item ><Paper style={{padding: 10}}>
-          <Grid container className={classes.sidebar} spacing={1}>
-          <Grid item ><Chip 
+        <Grid item ><Paper className={classes.sidebar}>
+          <Chip 
             icon={<HomeOutlined />} 
             label="Old Hive in the back yard"
             clickable
             color="primary"
-            deleteIcon={<HighlightOffOutlined />}/>
-          </Grid>
-          <Grid item ><Chip 
+            deleteIcon={<HighlightOffOutlined/>} 
+            onDelete={handleItemDelete}/>
+          <Chip 
             icon={<HomeOutlined />} 
             label="New Hive #1 in the front"
             clickable
             color="primary"
-            deleteIcon={<HighlightOffOutlined />}/>
-          </Grid>
-          <Grid item ><Chip 
+            deleteIcon={<HighlightOffOutlined/>} 
+            onDelete={handleItemDelete}/>
+          <Chip 
             icon={<HomeOutlined />} 
             label="New Hive #2 in the front"
             clickable
             color="secondary"
-            deleteIcon={<HighlightOffOutlined />}/>
-            </Grid>
-          </Grid>
+            deleteIcon={<HighlightOffOutlined/>}  
+            onDelete={handleItemDelete}/>
         </Paper></Grid>
         <Grid item className={classes.main}><Paper className={classes.mainPaper}>Section field</Paper></Grid>
       </Grid>
