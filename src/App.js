@@ -1,6 +1,6 @@
 import React from 'react';
 import {Container, Grid, Paper, CssBaseline, Chip, Avatar, Card, CardHeader, 
-  CardMedia, CardContent, Typography} from '@material-ui/core';
+  IconButton, CardContent, Typography} from '@material-ui/core';
 import { HomeOutlined, HighlightOffOutlined } from '@material-ui/icons'
 import { makeStyles } from '@material-ui/core/styles';
 import Navbar from './components/Navbar';
@@ -24,24 +24,30 @@ const useStyles = makeStyles((theme) => ({
     height: "100%"
   },
   sidebar: {
+    width: "40%",
     display: "flex",
-    flexDirection: "column",
+    flexDirection: "row",
+    flexWrap: "wrap",
     padding: 10,
     height: "100%",
     '& > *': {
       margin: theme.spacing(0.5),
     }
   },
-  media: {
-    height: 140
+  inCardButton: {
+    padding: "unset"
   },
   card: {
-    maxWidth: "356px",
+    maxWidth: "156px",
+    maxHeight: "64px",
+    backgroundColor: "#3f51b5",
+    color: "#fff",
   }
 }));
 
 export default function App() {
   const [user, setUser] = React.useState({ id:"Guest" });
+  const [id, setId] = React.useState(null);
   const classes = useStyles();
   const handleUser = () => {};
   
@@ -49,43 +55,51 @@ export default function App() {
     console.info('You clicked the delete icon.');
   };
 
+  const handleClick = () => {
+    setId("1");
+  }
+
   return (
     <Container component="main" maxWidth="lg" className={classes.rootContainer}>
       <CssBaseline />
       <Navbar user={user} updateUser={handleUser}/>
       <Grid container className={classes.container} spacing={1}>
-        <Grid item ><Paper className={classes.sidebar}>
+        <Grid item container className={classes.sidebar}>
+          <Card className={classes.card} onClick={handleClick}>
+            <CardHeader 
+              avatar={<HomeOutlined />} 
+              title="Bio Unit #1"
+              action={
+                <IconButton aria-label="settings" className={classes.inCardButton}>
+                  <HighlightOffOutlined/>
+                </IconButton>
+              }/>
+          </Card>
           <Card className={classes.card}>
             <CardHeader 
-              avatar={<Avatar>R</Avatar>} 
-              title="Old Hive in the back yard"/>
-            <CardMedia className={classes.media} title="optional picture" image={MyImage}/>
-            <CardContent>
-              <Typography variant="body2" color="textSecondary" component="p">
-                This impressive paella is a perfect party dish and a fun meal to cook together with your
-                guests. Add 1 cup of frozen peas along with the mussels, if you like.
-              </Typography>
-            </CardContent>
+              avatar={<HomeOutlined />} 
+              title="Bio Unit #2"
+              action={
+                <IconButton aria-label="settings" className={classes.inCardButton}>
+                  <HighlightOffOutlined/>
+                </IconButton>
+              }/>
           </Card>
-          <Chip 
-            icon={<HomeOutlined />} 
-            label="New Hive #1 in the front"
-            clickable
-            color="primary"
-            deleteIcon={<HighlightOffOutlined/>} 
-            onDelete={handleItemDelete}/>
-          <Chip 
-            icon={<HomeOutlined />} 
-            label="New Hive #2 in the front"
-            clickable
-            color="secondary"
-            deleteIcon={<HighlightOffOutlined/>}  
-            onDelete={handleItemDelete}/>
-        </Paper></Grid>
+          <Card className={classes.card}>
+            <CardHeader 
+              avatar={<HomeOutlined />} 
+              title="Bio Unit #3"
+              action={
+                <IconButton aria-label="settings" className={classes.inCardButton}>
+                  <HighlightOffOutlined/>
+                </IconButton>
+              }/>
+          </Card>
+        </Grid>
         <Grid item className={classes.main}>
           <Paper className={classes.mainPaper}>
-            Section field
             <img alt="Beehive" src={MyImage}/>
+            <p>Unit id {id} properties</p>
           </Paper>
         </Grid>
       </Grid>
