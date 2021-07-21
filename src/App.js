@@ -1,8 +1,9 @@
 import React from 'react';
-import {Container, Grid, Paper, CssBaseline, Chip} from '@material-ui/core';
+import {Container, Grid, Paper, CssBaseline, Chip, Avatar} from '@material-ui/core';
 import { HomeOutlined, HighlightOffOutlined } from '@material-ui/icons'
 import { makeStyles } from '@material-ui/core/styles';
 import Navbar from './components/Navbar';
+import MyImage from './pictures/beehive.png'
 
 const useStyles = makeStyles((theme) => ({
   rootContainer: {
@@ -30,6 +31,10 @@ const useStyles = makeStyles((theme) => ({
       margin: theme.spacing(0.5),
     }
   },
+  avatar: {
+    width: "56px",
+    height: "56px",
+  }
 }));
 
 export default function App() {
@@ -48,12 +53,13 @@ export default function App() {
       <Grid container className={classes.container} spacing={1}>
         <Grid item ><Paper className={classes.sidebar}>
           <Chip 
-            icon={<HomeOutlined />} 
+            avatar={<Avatar className={classes.avatar} alt="optional picture" src={MyImage}/>} 
             label="Old Hive in the back yard"
             clickable
             color="primary"
             deleteIcon={<HighlightOffOutlined/>} 
-            onDelete={handleItemDelete}/>
+            onDelete={handleItemDelete}
+            style={{height: "56px", width: "260px"}}/>
           <Chip 
             icon={<HomeOutlined />} 
             label="New Hive #1 in the front"
@@ -69,7 +75,12 @@ export default function App() {
             deleteIcon={<HighlightOffOutlined/>}  
             onDelete={handleItemDelete}/>
         </Paper></Grid>
-        <Grid item className={classes.main}><Paper className={classes.mainPaper}>Section field</Paper></Grid>
+        <Grid item className={classes.main}>
+          <Paper className={classes.mainPaper}>
+            Section field
+            <img alt="Beehive" src={MyImage}/>
+          </Paper>
+        </Grid>
       </Grid>
     </Container>
   );
