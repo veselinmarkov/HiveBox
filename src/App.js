@@ -1,25 +1,78 @@
-import logo from './logo.svg';
-import './App.css';
+import React from 'react';
+import {Container, Grid, Paper, CssBaseline, Chip} from '@material-ui/core';
+import { HomeOutlined, HighlightOffOutlined } from '@material-ui/icons'
+import { makeStyles } from '@material-ui/core/styles';
+import Navbar from './components/Navbar';
 
-function App() {
+const useStyles = makeStyles((theme) => ({
+  rootContainer: {
+    paddingTop: "0px", 
+    border: "2px solid #e34d7d", 
+    borderRadius: "7px",
+    height: "100%"
+  },
+  container: {
+    alignItems: "stretch",
+    margin: "5px 0px 5px"
+  },
+  main: {
+    flexGrow: 1,
+  },
+  mainPaper: {
+    height: "100%"
+  },
+  control: {
+    padding: theme.spacing(2),
+  },
+  sidebar: {
+    display: "flex",
+    flexDirection: "column",
+    height: "100%"
+  },
+}));
+
+export default function App() {
+  const [user, setUser] = React.useState({ id:"Guest" });
+  const classes = useStyles();
+  const handleUser = () => {};
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Container component="main" maxWidth="lg" className={classes.rootContainer}>
+      <CssBaseline />
+      <Navbar user={user} updateUser={handleUser}/>
+      {/*
+      <section>Section field
+        <aside>Aside field</aside>
+      </section>
+      */}
+      <Grid container className={classes.container} spacing={1}>
+        <Grid item ><Paper style={{padding: 10}}>
+          <Grid container className={classes.sidebar} spacing={1}>
+          <Grid item ><Chip 
+            icon={<HomeOutlined />} 
+            label="Old Hive in the back yard"
+            clickable
+            color="primary"
+            deleteIcon={<HighlightOffOutlined />}/>
+          </Grid>
+          <Grid item ><Chip 
+            icon={<HomeOutlined />} 
+            label="New Hive #1 in the front"
+            clickable
+            color="primary"
+            deleteIcon={<HighlightOffOutlined />}/>
+          </Grid>
+          <Grid item ><Chip 
+            icon={<HomeOutlined />} 
+            label="New Hive #2 in the front"
+            clickable
+            color="secondary"
+            deleteIcon={<HighlightOffOutlined />}/>
+            </Grid>
+          </Grid>
+        </Paper></Grid>
+        <Grid item className={classes.main}><Paper className={classes.mainPaper}>Section field</Paper></Grid>
+      </Grid>
+    </Container>
   );
 }
-
-export default App;
