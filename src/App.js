@@ -35,6 +35,10 @@ export default function App() {
   const [user, setUser] = React.useState({ id:"Guest" });
   const classes = useStyles();
   const handleUser = () => {};
+  
+  const handleItemDelete = () => {
+    console.info('You clicked the delete icon.');
+  };
 
   return (
     <Container component="main" maxWidth="lg" className={classes.rootContainer}>
@@ -53,21 +57,24 @@ export default function App() {
             label="Old Hive in the back yard"
             clickable
             color="primary"
-            deleteIcon={<HighlightOffOutlined />}/>
+            deleteIcon={<HighlightOffOutlined/>} 
+            onDelete={handleItemDelete}/>
           </Grid>
           <Grid item ><Chip 
             icon={<HomeOutlined />} 
             label="New Hive #1 in the front"
             clickable
             color="primary"
-            deleteIcon={<HighlightOffOutlined />}/>
+            deleteIcon={<HighlightOffOutlined/>} 
+            onDelete={handleItemDelete}/>
           </Grid>
           <Grid item ><Chip 
             icon={<HomeOutlined />} 
             label="New Hive #2 in the front"
             clickable
             color="secondary"
-            deleteIcon={<HighlightOffOutlined />}/>
+            deleteIcon={<HighlightOffOutlined/>}  
+            onDelete={handleItemDelete}/>
             </Grid>
           </Grid>
         </Paper></Grid>
