@@ -1,10 +1,11 @@
 import React from 'react';
 import {Container, Grid, Paper, CssBaseline, Chip, Avatar, Card, CardHeader, 
-  IconButton, CardContent, Typography} from '@material-ui/core';
+  IconButton, Typography, CardActionArea} from '@material-ui/core';
 import { HomeOutlined, HighlightOffOutlined } from '@material-ui/icons'
 import { makeStyles } from '@material-ui/core/styles';
 import Navbar from './components/Navbar';
 import MyImage from './pictures/beehive.png'
+import Control from './components/Control';
 
 const useStyles = makeStyles((theme) => ({
   rootContainer: {
@@ -23,26 +24,6 @@ const useStyles = makeStyles((theme) => ({
   mainPaper: {
     height: "100%"
   },
-  sidebar: {
-    width: "40%",
-    display: "flex",
-    flexDirection: "row",
-    flexWrap: "wrap",
-    padding: 10,
-    height: "100%",
-    '& > *': {
-      margin: theme.spacing(0.5),
-    }
-  },
-  inCardButton: {
-    padding: "unset"
-  },
-  card: {
-    maxWidth: "156px",
-    maxHeight: "64px",
-    backgroundColor: "#3f51b5",
-    color: "#fff",
-  }
 }));
 
 export default function App() {
@@ -51,50 +32,23 @@ export default function App() {
   const classes = useStyles();
   const handleUser = () => {};
   
-  const handleItemDelete = () => {
-    console.info('You clicked the delete icon.');
-  };
-
-  const handleClick = () => {
-    setId("1");
+  const handleIdChange = (id) => {
+    setId(id);
   }
+
+  const testUnitList = [
+        {id: 1, text: "Bio Unit #1"},
+        {id: 2, text: "Bio Unit #2"},
+        {id: 3, text: "Bio Unit #3"},
+    ]
 
   return (
     <Container component="main" maxWidth="lg" className={classes.rootContainer}>
       <CssBaseline />
       <Navbar user={user} updateUser={handleUser}/>
       <Grid container className={classes.container} spacing={1}>
-        <Grid item container className={classes.sidebar}>
-          <Card className={classes.card} onClick={handleClick}>
-            <CardHeader 
-              avatar={<HomeOutlined />} 
-              title="Bio Unit #1"
-              action={
-                <IconButton aria-label="settings" className={classes.inCardButton}>
-                  <HighlightOffOutlined/>
-                </IconButton>
-              }/>
-          </Card>
-          <Card className={classes.card}>
-            <CardHeader 
-              avatar={<HomeOutlined />} 
-              title="Bio Unit #2"
-              action={
-                <IconButton aria-label="settings" className={classes.inCardButton}>
-                  <HighlightOffOutlined/>
-                </IconButton>
-              }/>
-          </Card>
-          <Card className={classes.card}>
-            <CardHeader 
-              avatar={<HomeOutlined />} 
-              title="Bio Unit #3"
-              action={
-                <IconButton aria-label="settings" className={classes.inCardButton}>
-                  <HighlightOffOutlined/>
-                </IconButton>
-              }/>
-          </Card>
+        <Grid item >
+          <Control id={id} unitList={testUnitList} handleIdChange={handleIdChange}/>
         </Grid>
         <Grid item className={classes.main}>
           <Paper className={classes.mainPaper}>
