@@ -1,7 +1,12 @@
 import axios from "axios";
+import {samples} from "/home/vesko/hivebox/src/api/samples";
 
-export function getWord(id) {
-  return axios.get('word/' +String(id));
+export function getSamples(id) {
+  //return axios.get('word/' +String(id));
+    const promise = new Promise((resolve, reject) => {
+        resolve(samples.filter((element) => element.hive === id));
+    })
+    return promise;
 }
 
 export function getInfo() {
