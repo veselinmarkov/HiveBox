@@ -147,7 +147,7 @@ export default function Navbar(props) {
     const handleSnakClose = () => setSnakMessage(null);
 
     return (
-        <AppBar className={classes.appBar} position="static" color="primary">
+        <AppBar position="absolute" className={classes.appBar} position="static" color="primary">
           {auth ? 
             <Toolbar className={classes.toolbar}>
               <IconButton

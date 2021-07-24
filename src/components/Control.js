@@ -7,6 +7,7 @@ import { makeStyles } from '@material-ui/core/styles';
 const useStyles = makeStyles((theme) => ({
     sidebar: {
       width: "40%",
+      maxWidth: "330px",
       display: "flex",
       flexDirection: "row",
       flexWrap: "wrap",
@@ -28,7 +29,8 @@ const useStyles = makeStyles((theme) => ({
     cardMarker: {
       color: "#fff",
       backgroundColor: "#e34d7d"
-    }
+    },
+    empty: {}
   }));
 
 export default function Control({id, unitList, handleIdChange}) {
@@ -40,25 +42,29 @@ export default function Control({id, unitList, handleIdChange}) {
     const classes = useStyles();
     
     const handleClick = (e) => {
+        //console.log(e.currentTarget.id);
         if (handleIdChange)
-            handleIdChange(e.key);
+            handleIdChange( Number(e.currentTarget.id));
     }
 
     return (
         <div className={classes.sidebar}>
-            Control component
             {unitList.map(element => {
-                return (<Card className={classes.card, (element.id === id) ? classes.cardMarker : ""} 
-                    onClick={handleClick} key={element.id}>
+                return (<Card className={classes.card} 
+                    onClick={handleClick} key={element.id} id={element.id}>
                     <CardActionArea>
                     <CardHeader 
                       avatar={<HomeOutlined />} 
                       title={element.text}
+                      className={ (element.id === id) ? classes.cardMarker : classes.empty}
+                      /*
                       action={
                         <IconButton aria-label="settings" className={classes.inCardButton}>
                           <HighlightOffOutlined/>
                         </IconButton>
-                      }/>
+                      }
+                      */
+                      />
                     </CardActionArea>
                   </Card>)
             })}
