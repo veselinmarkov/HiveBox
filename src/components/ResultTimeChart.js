@@ -1,7 +1,7 @@
 
 import { makeStyles } from '@material-ui/core/styles';
-import { TimeSeries, avg, Index } from 'pondjs';
-import React from 'react';
+import { TimeSeries, avg, Index, TimeRange } from 'pondjs';
+import React, { useState } from 'react';
 import {
     Charts,
     ChartContainer,
@@ -23,6 +23,8 @@ const useStyles = makeStyles((theme) => ({
 
 export function ResultTimeChart(props) {    
     const classes = useStyles();
+    //new TimeRange(date.setFullYear( date.getFullYear() - 1 ) , new Date())
+    const [timerange, setTimerange] = useState(null)
     const data = props.data;
 
     if (! data || data.length === 0)
@@ -41,6 +43,9 @@ export function ResultTimeChart(props) {
         ])
     });
    
+    if (! timerange)
+        setTimerange(series.range())
+
 /*
     let series = new TimeSeries({
         name: "Bio Unit statistics",
@@ -64,13 +69,19 @@ export function ResultTimeChart(props) {
 
     console.log(series.min("temp_high"), series.max("temp_high"));
 
+    const handleTimeRangeChange = timerange => {
+        setTimerange(timerange);
+    };
+
     return (
         <Resizable className={classes.rootContainer}>
-        <ChartContainer timeRange={series ? series.range(): null} 
+        <ChartContainer timeRange={series ? timerange: null} 
                     title="Temperature statistics over the past month" 
                     //format="day" 
                     utc={false}
                     //padding ={0}
+                    enablePanZoom={true}
+                    onTimeRangeChanged={handleTimeRangeChange}
                     >
             <ChartRow height="130">
                 <YAxis
