@@ -1,7 +1,8 @@
 
 import { makeStyles } from '@material-ui/core/styles';
 import { TimeSeries, avg, Index, TimeRange } from 'pondjs';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { Button, CircularProgress, LinearProgress } from '@material-ui/core';
 import {
     Charts,
     ChartContainer,
@@ -12,6 +13,7 @@ import {
     LineChart,
     AreaChart,
 } from "react-timeseries-charts";
+import { getSamples } from '../api/wordsdb';
 
 const useStyles = makeStyles((theme) => ({
     rootContainer: {
@@ -24,42 +26,63 @@ const useStyles = makeStyles((theme) => ({
 export function ResultTimeChart(props) {    
     const classes = useStyles();
     //new TimeRange(date.setFullYear( date.getFullYear() - 1 ) , new Date())
-    const [timerange, setTimerange] = useState(null)
-    const data = props.data;
+    const [timerange, setTimerange] = useState(new TimeRange(new Date('2020-01-03T08:00:00'), new Date('2020-01-03T09:00:00')));
+    const [data, setData] = React.useState([]);
+    const [activeDelay, setActiveDelay] = useState(false)
+    const [activeQuery, setActiveQuery] = useState(false)
+    const id = props.id;
+    //let series = {}
+
+    useEffect( () => {
+        console.log('Effect invoked', activeDelay);
+        if (! activeDelay) {
+        // do not access server until delay in progress
+        setActiveQuery(true);
+          getSamples(id, timerange).then((retData) => {
+            //updataData = false;
+            setData(retData.data.data.items);
+            setActiveQuery(false);
+            // data = retData
+            //console.log('Effect invoked');
+          });
+        }
+      }, [id, activeDelay]);
 
     if (! data || data.length === 0)
         return (<h2>No data</h2>);
 
-//console.log(JSON.stringify(props.data));
+    //console.log(JSON.stringify(data));
+
+    /* const series = new TimeSeries({
+        name: "Bio Unit statistics",
+        columns: ["index", "temp_low", "temp_high", "heat_pwr"],
+        points: data.map((rec) => [
+            Index.getIndexString("1m", new Date(rec.sample_time)),
+            rec.temp_low,
+            rec.temp_high,
+            rec.heat_pwr
+        ])
+    }); */
+   
+    /* if (! timerange)
+        setTimerange(new TimeRange(new Date('01/01/2020'), new Date('02/01/2020')))
+ */
 
     const series = new TimeSeries({
         name: "Bio Unit statistics",
-        columns: ["index", "temp_low", "temp_high", "heat_pwr"],
-        points: props.data.map((rec) => [
-            Index.getIndexString("1h", new Date(rec.sample_time)),
+        columns: ["time", "temp_low", "temp_high", "heat_pwr"],
+        points: data.map((rec) => [
+            new Date(rec.sample_time),
             rec.temp_low,
             rec.temp_high,
             rec.heat_pwr
         ])
     });
-   
-    if (! timerange)
-        setTimerange(series.range())
-
-/*
-    let series = new TimeSeries({
-        name: "Bio Unit statistics",
-        columns: ["time", "success"],
-        points: data.map((rec) => [
-            new Date(rec.sample_time),
-            Number(rec.temp_low)
-        ])
-    });
-*/    
-    let dailySeries = series.dailyRollup({
+    
+    /* let dailySeries = series.dailyRollup({
         aggregation: {success: {success: avg()}},
         toTimeEvents: false 
-    })
+    }) */
 
     //const style = styler([
     //    { key: "success", color: "#A5C8E1"},
@@ -67,14 +90,23 @@ export function ResultTimeChart(props) {
 
     //console.log(JSON.stringify(series));
 
-    console.log(series.min("temp_high"), series.max("temp_high"));
+    //console.log(series.min("temp_high"), series.max("temp_high"));
 
     const handleTimeRangeChange = timerange => {
         setTimerange(timerange);
+        if (! activeDelay) {
+            console.log('Set Active delay true and start the timer');
+            setActiveDelay(true);
+            setTimeout(() => { setActiveDelay(false)}, 500)
+        }
+        //console.log(timerange);
     };
 
     return (
+        <React.Fragment>
+        { activeQuery && <LinearProgress/>}
         <Resizable className={classes.rootContainer}>
+        {/* <Button disabled={activeQuery}/>    */}
         <ChartContainer timeRange={series ? timerange: null} 
                     title="Temperature statistics over the past month" 
                     //format="day" 
@@ -136,7 +168,15 @@ export function ResultTimeChart(props) {
                     type="linear"
                 />
                 <Charts>
-                    <BarChart
+                    <LineChart
+                        axis="heat_power"
+                        //style={{success: {normal: {fill: "#e34d7d"}}}}
+                        spacing={5}
+                        columns={["heat_pwr"]}
+                        series={series}
+                        //radius={5.0}
+                    />
+                    {/* <BarChart
                         axis="heat_power"
                         //style={{success: {normal: {fill: "#e34d7d"}}}}
                         spacing={5}
@@ -144,10 +184,11 @@ export function ResultTimeChart(props) {
                         //style={upDownStyle}
                         series={series}
                         //radius={5.0}
-                    />
+                    /> */}
                 </Charts>
             </ChartRow>
         </ChartContainer>
         </Resizable>
+        </React.Fragment>
     );
 }

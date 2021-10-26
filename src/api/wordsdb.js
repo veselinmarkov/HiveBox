@@ -1,12 +1,18 @@
 import axios from "axios";
 import {samples} from "/home/vesko/hivebox/src/api/samples";
+import { TimeRange } from "pondjs";
 
-export function getSamples(id) {
-  //return axios.get('word/' +String(id));
+/* export function getSamples(id) {
     const promise = new Promise((resolve, reject) => {
         resolve(samples.filter((element) => element.hive === id));
     })
     return promise;
+} */
+
+export function getSamples(id, timerange) {
+    return axios.get('samples', { params: { sample1: timerange.begin(), 
+            sample2: timerange.end(), 
+            hive: id}});
 }
 
 export function getInfo() {
