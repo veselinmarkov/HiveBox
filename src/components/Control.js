@@ -23,12 +23,14 @@ const useStyles = makeStyles((theme) => ({
     card: {
       maxWidth: "156px",
       maxHeight: "64px",
-      backgroundColor: "#3f51b5",
+      // backgroundColor: "#3f51b5",
+      background: theme.palette.primary.main,
       color: "#fff",
     },
     cardMarker: {
       color: "#fff",
-      backgroundColor: "#e34d7d"
+      // backgroundColor: "#e34d7d"
+      backgroundColor: theme.palette.secondary.main,
     },
     empty: {}
   }));

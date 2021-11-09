@@ -1,20 +1,16 @@
 import React from 'react';
-import {Container, Grid, Paper, CssBaseline, Chip, Avatar, Card, CardHeader, 
+import {Container, Grid, Paper, CssBaseline, 
   IconButton, Typography, CardActionArea, Divider } from '@material-ui/core';
-import { HomeOutlined, HighlightOffOutlined } from '@material-ui/icons'
 import { makeStyles } from '@material-ui/core/styles';
-import Navbar from './components/Navbar';
-import MyImage from './pictures/beehive.png'
 import Control from './components/Control';
 import { ResultTimeChart } from './components/ResultTimeChart';
-// import { getSamples } from './api/wordsdb';
-// import { useEffect } from 'react';
 
 const useStyles = makeStyles((theme) => ({
   rootContainer: {
     paddingTop: "0px", 
     border: "2px solid #e34d7d", 
     borderRadius: "7px",
+    marginTop: "60px",
     //height: "100vh"
   },
   container: {
@@ -41,7 +37,7 @@ const useStyles = makeStyles((theme) => ({
 //var updataData = true;
 
 export default function Dashboard() {
-  const [user, setUser] = React.useState({ id:"Guest" });
+  // const [user, setUser] = React.useState({ id:"Guest" });
   const [id, setId] = React.useState(2);
   // const [data, setData] = React.useState([]);
   const classes = useStyles();
@@ -55,8 +51,6 @@ export default function Dashboard() {
       });
     //}
   }, [id]); */
-
-  const handleUser = () => {};
   
   const handleIdChange = (id) => {
     //updataData =true;
@@ -90,7 +84,7 @@ export default function Dashboard() {
   return (
     <Container component="main" maxWidth="lg" className={classes.rootContainer}>
       <CssBaseline />
-      <Navbar user={user} updateUser={handleUser}/>
+      {/* <Navbar user={user} updateUser={handleUser}/> */}
       <Grid container className={classes.container} spacing={1}>
           <Control id={id} unitList={testUnitList} handleIdChange={handleIdChange}/>
         <Grid item className={classes.main}>
@@ -101,7 +95,7 @@ export default function Dashboard() {
             </Typography>
             <Divider/>
             <div className={classes.mainDivider}/>
-            <ResultTimeChart id={id}/>
+            <ResultTimeChart user_id="1" hive_id={id}/>
           </Paper>
         </Grid>
       </Grid>

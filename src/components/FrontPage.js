@@ -1,27 +1,17 @@
-import React from 'react';
-import {Container, AppBar, Toolbar, Box, Typography, Button, IconButton, Card, CardHeader, CardContent} from '@material-ui/core';
-import MenuIcon from '@material-ui/icons/Menu';
-import { makeStyles} from '@material-ui/core/styles';
-import MyFlower from './pictures/flowers_wide.jpg';
-import MyBee from './pictures/bee.jpg';
-import MyLogo from './pictures/bee_logo.svg' ;
-import { createTheme, ThemeProvider } from '@material-ui/core/styles';
+// import { FormatLineSpacingRounded } from "@material-ui/icons"
+import {Container, Box, Typography, Card, 
+    CardHeader, CardContent} from '@material-ui/core';
+import MyFlower from '../pictures/flowers_wide.jpg';
+import MyFlower_long from '../pictures/flowers_long.jpg';
+import MyBee from '../pictures/bee.jpg';
+import MyLogo from '../pictures/bee_logo.svg' ;
 import CheckCircleRoundedIcon from '@material-ui/icons/CheckCircleRounded';
-
-const theme = createTheme({
-    palette: {
-        primary: {
-            main: '#14908a', //20, 144, 138 green
-        },
-        secondary: {
-            main: '#97295e', //151,41,94 lila
-        }
-    }
-})
+import { makeStyles } from '@material-ui/core/styles'; 
 
 const useStyles = makeStyles((theme) => ({
     rootContainer: {
-      paddingTop: "0px", 
+      padding: "0px 20px", 
+      margin: "70px 5px 0px",
     //   border: "2px solid #e34d7d", 
       borderRadius: "7px",
       //height: "100vh"
@@ -34,58 +24,34 @@ const useStyles = makeStyles((theme) => ({
     },
     container: {
       alignItems: "stretch",
-      margin: "5px 0px 5px",
+      margin: "50px 5px",
       flexWrap: "nowrap",
     //   height:"1500px",
     },
-    delimiter: {
-        flexGrow: "1",
-    },
-}))
+  }))
 
-export default function AppMain() {
+export default function FrontPage() {
     const classes = useStyles();
+
     return (
-        <ThemeProvider theme={theme}>
         <Container component="main" maxWidth="lg" className={classes.rootContainer}>
-            {//<div className={classes.container} style={{backgroundImage: `url(${MyImage})`}}>
-}
-            <div className={classes.container}>
-                <AppBar position="fixed">
-                    <Toolbar>
-                    <IconButton
-                        size="medium"
-                        edge="start"
-                        color="inherit"
-                        aria-label="menu"
-                        sx={{ mr: 2 }}
-                    >
-                        <MenuIcon />
-                    </IconButton>
-                    <Button color="inherit" href="/dash">
-                        Dashboard
-                    </Button>
-                    <Button color="inherit">
-                        About us
-                    </Button>
-                    <Button color="inherit">
-                        Contact
-                    </Button>
-                    <div className={classes.delimiter}/>
-                    <Button color="inherit" edge="final">Login</Button>
-                    </Toolbar>
-                </AppBar>
-            {/* <Box sx={{ display: "flex", margin: "25px", alignItems: "flex-end"}}>
-                <Typography variant="h1" color="primary" style={{flexGrow: 1}}>
-                    BeeComfort
-                </Typography>
-                <img alt="Beehive" src={MyFlower} width="400"/>
-            </Box> */}
-            <Box sx={{margin: "25px", marginBottom: "0px", position: "relative", height:"480px"}}>
+          {/* <div className={classes.container}> */}
+            <Box sx={{margin: "25px", marginBottom: "0px", position: "relative", height:"430px"}}>
+                <Box sx={{display: "flex", alignItems:"center" , position: "absolute", left: "0px", top: "30px", zIndex: "1"}}>                
+                    <img alt="Logo" src={MyLogo} width="230"/>
+                    <Box>
+                        <Typography variant="h1" color="primary" style={{textShadow: "2px 2px 5px white"}}>
+                            BeeComfort
+                        </Typography>
+                        <Typography variant="h4" color="secondary" noWrap style={{textShadow: "2px 2px 5px white"}}>
+                            Comfort ambient for your Honey bees
+                        </Typography>
+                    </Box>
+                </Box>
                 <img alt="Flower" src={MyFlower} width="500" style={{position: "absolute", bottom: "40px", right: "45px"}}/>
                 <img alt="Bee" src={MyBee} width="200" style={{position: "absolute", bottom: "0px", right: "0px"}}/>
             </Box>
-            <Box sx={{display: "flex", alignItems:"center"}}>                
+            {/* <Box sx={{display: "flex", alignItems:"center"}}>                
                 <img alt="Logo" src={MyLogo} width="230"/>
                 <Box>
                     <Typography variant="h1" color="primary">
@@ -95,7 +61,7 @@ export default function AppMain() {
                         Comfort ambient for your Honey bees
                     </Typography>
                 </Box>
-            </Box>
+            </Box> */}
             <Card style={{marginTop: "25px"}}>
                 <CardHeader
                     title={<Typography variant="h5">Helping Bees stay Warm and Safe</Typography>}
@@ -162,10 +128,7 @@ export default function AppMain() {
                     )
                     .join('\n\n')}
             </Box> */}
-            </div>
+        {/* </div> */}
         </Container>
-        </ThemeProvider>
-    )
+    );
 }
-
-//export default withStyles(styles)(App);

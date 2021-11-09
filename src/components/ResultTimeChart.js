@@ -2,7 +2,7 @@
 import { makeStyles } from '@material-ui/core/styles';
 import { TimeSeries, avg, Index, TimeRange } from 'pondjs';
 import React, { useState, useEffect } from 'react';
-import { Button, CircularProgress, LinearProgress } from '@material-ui/core';
+import { LinearProgress } from '@material-ui/core';
 import {
     Charts,
     ChartContainer,
@@ -13,7 +13,7 @@ import {
     LineChart,
     AreaChart,
 } from "react-timeseries-charts";
-import { getSamples } from '../api/wordsdb';
+import { getSamples } from '../api/hivedb';
 
 const useStyles = makeStyles((theme) => ({
     rootContainer: {
@@ -23,14 +23,15 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-export function ResultTimeChart(props) {    
+export function ResultTimeChart(props) {    // user_id, hive_id, 
     const classes = useStyles();
     //new TimeRange(date.setFullYear( date.getFullYear() - 1 ) , new Date())
     const [timerange, setTimerange] = useState(new TimeRange(new Date('2020-01-03T08:00:00'), new Date('2020-01-03T09:00:00')));
     const [data, setData] = React.useState([]);
     const [activeDelay, setActiveDelay] = useState(false)
     const [activeQuery, setActiveQuery] = useState(false)
-    const id = props.id;
+    const user_id = props.user_id;
+    const hive_id = props.hive_id;
     //let series = {}
 
     useEffect( () => {
@@ -38,15 +39,17 @@ export function ResultTimeChart(props) {
         if (! activeDelay) {
         // do not access server until delay in progress
         setActiveQuery(true);
-          getSamples(id, timerange).then((retData) => {
+        getSamples(user_id, hive_id, timerange).then((retData) => {
             //updataData = false;
             setData(retData.data.data.items);
             setActiveQuery(false);
-            // data = retData
-            //console.log('Effect invoked');
-          });
+        }).catch(err => {
+            console.log({location: "ResultTimeChart; getSamples return", error: err});
+            setData(null);
+            setActiveQuery(false);
+        })
         }
-      }, [id, activeDelay]);
+      }, [user_id, hive_id, activeDelay]);
 
     if (! data || data.length === 0)
         return (<h2>No data</h2>);

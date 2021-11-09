@@ -1,50 +1,97 @@
 import React from 'react'
-import {Popover, InputBase, Button} from '@material-ui/core'
+import {Popover, Button, Input, Divider, Box, Typography} from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles';
+import {login, signUp} from '../api/hivedb' 
 
 const useStyles = makeStyles((theme) => ({ 
     container: {
       display: "flex",
       gap: "10px",
       flexDirection: "column",
-      padding: "15px",
-      border: "2px solid #e34d7d", 
+      padding: "35px",
+    //   border: "2px solid #e34d7d", 
+      border: "2px solid",
+      borderColor: theme.palette.primary.main,
       borderRadius: "5px",
-      backgroundColor: "#3f51b5",
-      color: "#fff",
+      width: "300px",
+    //   backgroundColor: theme.palette.primary.main,
+    //   color: "primary",
     },
     inputText: {
         backgroundColor: theme.palette.background.default
     }
 }));
 
-export function SignupMenu(props) { //open, anchor, handleSignup, handleClose
+export default function SignupMenu(props) { //open, anchor, handleSignup, handleClose
     const [firstName, setFirstName ] = React.useState("");
     const [lastName, setLastName ] = React.useState("");
-    const [username, setUsername ] = React.useState("");
-    const [password, setPassword ] = React.useState("");
+    const [email, setEmail ] = React.useState("");
+    const [username1, setUsername1 ] = React.useState("");
+    const [username2, setUsername2 ] = React.useState("");
+    const [password1, setPassword1 ] = React.useState("");
+    const [password2, setPassword2 ] = React.useState("");
+    const [password2Rep, setPassword2Rep ] = React.useState("");
+    const [showError1, setShowError1 ] = React.useState("");
+    const [showError2, setShowError2 ] = React.useState("");
     const classes = useStyles();
     //const open = Boolean(props.anchor);
 
-    const handleSignup = () => {
-        if (props.handleSignup)
-            props.handleSignup(firstName, lastName, username, password, () => {
-                setFirstName('');
-                setLastName('');
-                setUsername('');
-                setPassword('');
-            });
+    if (! props.handleSignUp || ! props.handleLogin || ! props.handleClose)
+        throw Error('Property handleSignup required!')
+
+    const handleSignUp = async () => {
+        if (! username2 || ! password2) {
+            setShowError2('Please, provide Username and Password for Signing up');
+            return;
+        } else if (password2 !== password2Rep) {
+            setShowError2('"Repeat Password" do not match the original Password')
+            return;
+        }
+        const response = await signUp(firstName, lastName, email, username2, password2);
+        props.handleSignUp({user: username2, status: response.status, data: response.data, error: response.error});
+        if (response.error)
+            setShowError2(response.error)
+        else {
+            setShowError2('');
+            setFirstName('');
+            setLastName('');
+            setEmail('');
+            setUsername2('');
+            setPassword2('');
+            setPassword2Rep('');
+        };
+    }
+
+    const handleLogin = async () => {
+        if (! username1 || ! password1) {
+            setShowError1('Please, provide Username and Password to login');
+            return
+        }
+        const response = await login(username1, password1);
+        props.handleLogin({user: username1, status: response.status, data: response.data, error: response.error})
+        if (response.error)
+            setShowError1(response.error)
+        else {
+            setShowError1('')
+            setUsername1('');
+            setPassword1('');
+        }
     }
 
     const handleClose = () => {
-        if (props.handleClose)
-            props.handleClose();
+        setShowError1('');
+        setShowError2('');
+        props.handleClose();
     }
 
     const handleFirstName = e => setFirstName(e.target.value);
     const handleLastName = e => setLastName(e.target.value);
-    const handleUser = e => setUsername(e.target.value);
-    const handlePassword = e => setPassword(e.target.value);
+    const handleEmail = e => setEmail(e.target.value);
+    const handleUser1 = e => setUsername1(e.target.value);
+    const handlePassword1 = e => setPassword1(e.target.value);
+    const handleUser2 = e => setUsername2(e.target.value);
+    const handlePassword2 = e => setPassword2(e.target.value);
+    const handlePassword2Rep = e => setPassword2Rep(e.target.value);
     return (
         <Popover
             id="popper"
@@ -59,19 +106,35 @@ export function SignupMenu(props) { //open, anchor, handleSignup, handleClose
                 vertical: 'top',
                 horizontal: 'center',
             }} >
-                <div className={classes.container}>
-                <InputBase className={classes.inputText} placeholder="FirstName"
-                    onChange={handleFirstName} value={firstName}/>
-                <InputBase className={classes.inputText} placeholder="LastName"
-                    onChange={handleLastName} value={lastName}/>
-                <InputBase className={classes.inputText} placeholder="User"
-                    onChange={handleUser} value={username}/>
-                <InputBase type={"password"} className={classes.inputText} 
-                    placeholder="password" onChange={handlePassword} value={password}/>
-                <Button onClick={handleSignup} variant="contained" color="primary">
-                    Sign Up
-                </Button>
-                </div>
+                <Box component="form" className={classes.container}>
+                    <Input className={classes.inputText} placeholder="User"
+                        onChange={handleUser1} value={username1}/>
+                    <Input type={"password"} className={classes.inputText} 
+                        placeholder="password" onChange={handlePassword1} value={password1}/>
+                    <Typography color="error">{showError1}</Typography>
+                    <Button onClick={handleLogin} variant="contained" color="primary">
+                        Login
+                    </Button>
+
+                    <Divider variant="middle" style={{marginTop: "30px", marginBottom: "30px"}}/>
+                    <Typography style={{alignSelf: "flex-end"}}>or Sign up</Typography>
+                    <Input className={classes.inputText} placeholder="First Name"
+                        onChange={handleFirstName} value={firstName}/>
+                    <Input className={classes.inputText} placeholder="Last Name"
+                        onChange={handleLastName} value={lastName}/>
+                    <Input className={classes.inputText} placeholder="E-Mail"
+                        onChange={handleEmail} value={email}/>
+                    <Input className={classes.inputText} placeholder="User"
+                        onChange={handleUser2} value={username2}/>
+                    <Input type={"password"} className={classes.inputText} 
+                        placeholder="password" onChange={handlePassword2} value={password2}/>
+                    <Input type={"password"} className={classes.inputText} 
+                        placeholder="repeat password" onChange={handlePassword2Rep} value={password2Rep}/>
+                    <Typography color="error">{showError2}</Typography>
+                    <Button onClick={handleSignUp} variant="contained" color="primary">
+                        Sign Up
+                    </Button>
+                </Box>
             </Popover>
     )
 }
