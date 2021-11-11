@@ -1,6 +1,6 @@
 
 import { makeStyles } from '@material-ui/core/styles';
-import { TimeSeries, avg, Index, TimeRange } from 'pondjs';
+import { TimeSeries, Index, TimeRange } from 'pondjs';
 import React, { useState, useEffect } from 'react';
 import { LinearProgress, Typography } from '@material-ui/core';
 import {
@@ -11,7 +11,6 @@ import {
     BarChart,
     Resizable, 
     LineChart,
-    AreaChart,
 } from "react-timeseries-charts";
 import { getSamples } from '../api/hivedb';
 
@@ -89,10 +88,6 @@ export function ResultTimeChart(props) {    // user_id, hive_id,
         toTimeEvents: false 
     }) */
 
-    //const style = styler([
-    //    { key: "success", color: "#A5C8E1"},
-    //]);
-
     //console.log(JSON.stringify(series));
 
     //console.log(series.min("temp_high"), series.max("temp_high"));
@@ -129,7 +124,7 @@ export function ResultTimeChart(props) {    // user_id, hive_id,
         <Typography variant="h6">
             Granularity: {data.aggregation}, Samples: {data.totalItems} {tracker.tracker ? ", Marker: "+tracker.tracker.toLocaleString() : ""}
         </Typography>
-        { tracker.tracker ?
+        { tracker.trackerEvent ?
             <div style={{position: 'relative'}}>
                 <div style={{position: 'absolute', left: tracker.trackerX, top: '30px'}}>
                     <div style={markerStyle}>Temp low: {Number(tracker.trackerEvent.get('temp_low')).toFixed(2)}</div>

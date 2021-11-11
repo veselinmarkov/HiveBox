@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
-import {AppBar, Toolbar, Box, Typography, Button, IconButton,  
+import {AppBar, Toolbar, Typography, Button, IconButton,  
      Snackbar} from '@material-ui/core';
-import MenuIcon from '@material-ui/icons/Menu';
 import SignupMenu from './SignupMenu'
 import { logout as hivedb_logout, refresh as hivedb_refresh } from '../api/hivedb';
 import { PersonOutline } from '@material-ui/icons';
@@ -26,7 +25,7 @@ export default function Navbar() {
                 return;
             hivedb_refresh().then( result => {
                 setUser( parseToken(result.data.refresh));
-            }).catch( err => console.log(err));
+            }).catch( err => setSnakMessage(err));
         }
     });
 
@@ -43,21 +42,21 @@ export default function Navbar() {
         setMenuAnchor(null)
     }
 
-    const handleLoginUser = (userInfo) => {
-        if (! userInfo.error) {
+    const handleFeedBack = (operation, error) => {
+        if (! error) {
             setMenuAnchor(null);
-            setSnakMessage(JSON.stringify(userInfo));
-            setUser(userInfo.user);
+            setSnakMessage(operation);
+            // setUser({user_name: userInfo.user_name});
         }
     }
     
-    const handleSignUpUser = (userInfo) => {
+    /* const handleSignUpUser = (userInfo) => {
         if (! userInfo.error) {
             setMenuAnchor(null)
-            setSnakMessage(JSON.stringify(userInfo));
-            setUser(userInfo.user);
+            setSnakMessage("User created");
+            // setUser({user_name: userInfo.user_name});
         }
-    }
+    } */
 
     const handleSnakClose = () => setSnakMessage(null);
 
@@ -91,13 +90,13 @@ export default function Navbar() {
                 <>
                     <PersonOutline style={{margin: "5px"}}/>
                     <Typography variant="h6"  style={{ minWidth:"100px"}} noWrap >{user.user_name}</Typography>
-                    <Button color="inherit" edge="final" onClick={handleLogoutClick}>Logout</Button>
+                    <Button color="inherit" edge="final" onClick={handleLogoutClick} href="/">Logout</Button>
                 </>
                 :
                 <Button color="inherit" edge="final" onClick={handleLoginClick}>Login</Button>
             }
             <SignupMenu open={Boolean(menuAnchor)} anchor={menuAnchor} 
-                handleLogin={handleLoginUser} handleSignUp={handleSignUpUser} handleClose={handleLoginClose}/>
+                handleFeedBack={handleFeedBack} handleClose={handleLoginClose}/>
             <Snackbar open={Boolean(snakMessage)} autoHideDuration={6000} 
                 onClose={handleSnakClose} message={snakMessage} 
                 anchorOrigin={{ vertical: "top", horizontal: "center" }}>            

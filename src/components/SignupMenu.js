@@ -36,8 +36,8 @@ export default function SignupMenu(props) { //open, anchor, handleSignup, handle
     const classes = useStyles();
     //const open = Boolean(props.anchor);
 
-    if (! props.handleSignUp || ! props.handleLogin || ! props.handleClose)
-        throw Error('Property handleSignup required!')
+    if (! props.handleFeedBack || ! props.handleClose)
+        throw Error('Property handleFeedBack and handleClose are required!')
 
     const handleSignUp = async () => {
         if (! username2 || ! password2) {
@@ -47,19 +47,27 @@ export default function SignupMenu(props) { //open, anchor, handleSignup, handle
             setShowError2('"Repeat Password" do not match the original Password')
             return;
         }
-        const response = await signUp(firstName, lastName, email, username2, password2);
-        props.handleSignUp({user: username2, status: response.status, data: response.data, error: response.error});
-        if (response.error)
-            setShowError2(response.error)
-        else {
-            setShowError2('');
-            setFirstName('');
-            setLastName('');
-            setEmail('');
-            setUsername2('');
-            setPassword2('');
-            setPassword2Rep('');
-        };
+        let response = await signUp(firstName, lastName, email, username2, password2);
+        if (response.error) {
+            if (response.status == 400)
+                setShowError2('The user name already exists; ' +response.error);
+            else
+                setShowError2(response.error);
+            return;
+        }
+        response = await login(username2, password2);
+        props.handleFeedBack("User created", response.error);
+        if (response.error) {
+            setShowError2(response.error);
+            return;
+        }
+        setShowError2('');
+        setFirstName('');
+        setLastName('');
+        setEmail('');
+        setUsername2('');
+        setPassword2('');
+        setPassword2Rep('');
     }
 
     const handleLogin = async () => {
@@ -68,9 +76,12 @@ export default function SignupMenu(props) { //open, anchor, handleSignup, handle
             return
         }
         const response = await login(username1, password1);
-        props.handleLogin({user: username1, status: response.status, data: response.data, error: response.error})
+        props.handleFeedBack("Login successfull", response.error)
         if (response.error)
-            setShowError1(response.error)
+            if (response.status ==401)
+                setShowError1('Invalid credentials. Incorrect User or password; ' +response.error);
+            else
+                setShowError1(response.error);
         else {
             setShowError1('')
             setUsername1('');

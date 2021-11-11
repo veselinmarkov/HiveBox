@@ -1,7 +1,6 @@
 import React from 'react';
-import {Container, Grid, Paper, CssBaseline, Chip, Avatar, Card, CardHeader, 
-  IconButton, Typography, CardActionArea} from '@material-ui/core';
-import { HomeOutlined, HighlightOffOutlined } from '@material-ui/icons';
+import {Card, CardHeader, CardActionArea} from '@material-ui/core';
+import { HomeOutlined} from '@material-ui/icons';
 import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles((theme) => ({

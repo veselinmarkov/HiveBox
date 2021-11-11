@@ -1,6 +1,6 @@
 import React from 'react';
 import {Container, Grid, Paper, CssBaseline, 
-  IconButton, Typography, CardActionArea, Divider } from '@material-ui/core';
+  Typography, Divider } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import Control from './components/Control';
 import { ResultTimeChart } from './components/ResultTimeChart';
@@ -69,7 +69,7 @@ export default function Dashboard() {
         {id: 9, text: "Bio Unit #9"},
     ]
   
-  const testSamples = [
+  /* const testSamples = [
     {"hive":1,"sample_time":"2020-06-01T00:00:00.000Z","temp_low":"19.353","temp_high":0,"temp_hot":"22.470","temp_out":13,"temp_target":"-10.000","humi_in":"71.77","humi_out":null,"heat_pwr":null,"fan":746,"mode":"monitor","heater_breakers":10},
     {"hive":1,"sample_time":"2020-06-01T01:00:00.000Z","temp_low":"19.008","temp_high":null,"temp_hot":"22.215","temp_out":13,"temp_target":"-10.000","humi_in":"72.41","humi_out":null,"heat_pwr":10,"fan":746,"mode":"monitor","heater_breakers":10},
     {"hive":1,"sample_time":"2020-06-01T02:00:00.000Z","temp_low":"18.409","temp_high":5,"temp_hot":"21.634","temp_out":12,"temp_target":"-10.000","humi_in":"70.73","humi_out":null,"heat_pwr":NaN,"fan":749,"mode":"monitor","heater_breakers":10},
@@ -79,7 +79,7 @@ export default function Dashboard() {
     {"hive":1,"sample_time":"2020-06-01T06:00:00.000Z","temp_low":"18.767","temp_high":null,"temp_hot":"21.686","temp_out":15,"temp_target":"-10.000","humi_in":"68.90","humi_out":null,"heat_pwr":0,"fan":854,"mode":"monitor","heater_breakers":10},
     {"hive":1,"sample_time":"2020-06-01T07:00:00.000Z","temp_low":"19.797","temp_high":null,"temp_hot":"22.504","temp_out":18,"temp_target":"-10.000","humi_in":"66.04","humi_out":null,"heat_pwr":0,"fan":742,"mode":"monitor","heater_breakers":10},
     {"hive":1,"sample_time":"2020-06-01T08:00:00.000Z","temp_low":"21.270","temp_high":null,"temp_hot":"24.139","temp_out":20,"temp_target":"-10.000","humi_in":"62.21","humi_out":null,"heat_pwr":0,"fan":915,"mode":"monitor","heater_breakers":10},
-  ];
+  ]; */
 
   return (
     <Container component="main" maxWidth="lg" className={classes.rootContainer}>
@@ -94,7 +94,7 @@ export default function Dashboard() {
               Unit id {id} properties
             </Typography>
             <Divider/>
-            {/* <div className={classes.mainDivider}/> */}
+            <div className={classes.mainDivider}/>
             <ResultTimeChart user_id="1" hive_id={id}/>
           </Paper>
         </Grid>
