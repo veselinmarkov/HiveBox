@@ -5,7 +5,7 @@ import MenuIcon from '@material-ui/icons/Menu';
 import SignupMenu from './SignupMenu'
 import { logout as hivedb_logout, refresh as hivedb_refresh } from '../api/hivedb';
 import { PersonOutline } from '@material-ui/icons';
-import MyLogo from '../pictures/bee_logo.svg' ;
+import MyLogo from '../pictures/bee_logo_v12.svg' ;
 
 function parseToken(token) {
     try {

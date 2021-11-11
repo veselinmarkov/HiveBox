@@ -7,7 +7,7 @@ import { ResultTimeChart } from './components/ResultTimeChart';
 
 const useStyles = makeStyles((theme) => ({
   rootContainer: {
-    paddingTop: "0px", 
+    paddingTop: "0", 
     border: "2px solid #e34d7d", 
     borderRadius: "7px",
     marginTop: "60px",
@@ -30,7 +30,7 @@ const useStyles = makeStyles((theme) => ({
   },
   mainDivider: {
     flexGrow: 1,
-    minHeight: "50px",
+    minHeight: "20px",
   },
 }));
 
@@ -90,11 +90,11 @@ export default function Dashboard() {
         <Grid item className={classes.main}>
           <Paper className={classes.mainPaper}>
             {/*<img alt="Beehive" src={MyImage}/>*/}
-            <Typography variant="h4">
+            <Typography variant="h6">
               Unit id {id} properties
             </Typography>
             <Divider/>
-            <div className={classes.mainDivider}/>
+            {/* <div className={classes.mainDivider}/> */}
             <ResultTimeChart user_id="1" hive_id={id}/>
           </Paper>
         </Grid>

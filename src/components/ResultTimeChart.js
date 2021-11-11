@@ -2,7 +2,7 @@
 import { makeStyles } from '@material-ui/core/styles';
 import { TimeSeries, avg, Index, TimeRange } from 'pondjs';
 import React, { useState, useEffect } from 'react';
-import { LinearProgress } from '@material-ui/core';
+import { LinearProgress, Typography } from '@material-ui/core';
 import {
     Charts,
     ChartContainer,
@@ -27,7 +27,8 @@ export function ResultTimeChart(props) {    // user_id, hive_id,
     const classes = useStyles();
     //new TimeRange(date.setFullYear( date.getFullYear() - 1 ) , new Date())
     const [timerange, setTimerange] = useState(new TimeRange(new Date('2020-01-03T08:00:00'), new Date('2020-01-03T09:00:00')));
-    const [data, setData] = React.useState([]);
+    const [data, setData] = React.useState({"items":[], "aggregation": "1m", "totalItems": 0});
+    const [tracker, setTracker] = React.useState({tracker: null, trackerEvent: null, trackerX: null});
     const [activeDelay, setActiveDelay] = useState(false)
     const [activeQuery, setActiveQuery] = useState(false)
     const user_id = props.user_id;
@@ -41,7 +42,7 @@ export function ResultTimeChart(props) {    // user_id, hive_id,
         setActiveQuery(true);
         getSamples(user_id, hive_id, timerange).then((retData) => {
             //updataData = false;
-            setData(retData.data.data.items);
+            setData(retData.data.data);
             setActiveQuery(false);
         }).catch(err => {
             console.log({location: "ResultTimeChart; getSamples return", error: err});
@@ -56,22 +57,23 @@ export function ResultTimeChart(props) {    // user_id, hive_id,
 
     //console.log(JSON.stringify(data));
 
-    /* const series = new TimeSeries({
+    const series = new TimeSeries({
         name: "Bio Unit statistics",
-        columns: ["index", "temp_low", "temp_high", "heat_pwr"],
-        points: data.map((rec) => [
-            Index.getIndexString("1m", new Date(rec.sample_time)),
+        columns: ["index", "temp_low", "temp_high", "heat_pwr", "temp_out"],
+        points: data.items.map((rec) => [
+            Index.getIndexString(data.aggregation, new Date(rec.sample_time)),
             rec.temp_low,
             rec.temp_high,
-            rec.heat_pwr
+            rec.heat_pwr,
+            rec.temp_out,
         ])
-    }); */
+    });
    
     /* if (! timerange)
         setTimerange(new TimeRange(new Date('01/01/2020'), new Date('02/01/2020')))
  */
 
-    const series = new TimeSeries({
+    /* const series = new TimeSeries({
         name: "Bio Unit statistics",
         columns: ["time", "temp_low", "temp_high", "heat_pwr"],
         points: data.map((rec) => [
@@ -80,7 +82,7 @@ export function ResultTimeChart(props) {    // user_id, hive_id,
             rec.temp_high,
             rec.heat_pwr
         ])
-    });
+    }); */
     
     /* let dailySeries = series.dailyRollup({
         aggregation: {success: {success: avg()}},
@@ -105,23 +107,61 @@ export function ResultTimeChart(props) {    // user_id, hive_id,
         //console.log(timerange);
     };
 
+    const handleTrackerChanged = (t, scale) => {
+        setTracker({
+            tracker: t,
+            trackerEvent: t && series.at(series.bisect(t)),
+            trackerX: t && scale(t)
+        });
+    };
+
+    const markerStyle = {
+        backgroundColor: 'rgba(255, 255, 255, 0.8)',
+        color: "#AAA",
+        marginLeft: "5px"
+    }
+
     return (
         <React.Fragment>
+        <Typography variant="h6">
+            Time period:{timerange.begin().toLocaleString()} - {timerange.end().toLocaleString()}
+        </Typography>
+        <Typography variant="h6">
+            Granularity: {data.aggregation}, Samples: {data.totalItems} {tracker.tracker ? ", Marker: "+tracker.tracker.toLocaleString() : ""}
+        </Typography>
+        { tracker.tracker ?
+            <div style={{position: 'relative'}}>
+                <div style={{position: 'absolute', left: tracker.trackerX, top: '30px'}}>
+                    <div style={markerStyle}>Temp low: {Number(tracker.trackerEvent.get('temp_low')).toFixed(2)}</div>
+                </div>
+                <div style={{position: 'absolute', left: tracker.trackerX, top: '160px' }}>
+                    <div style={markerStyle}>Temp high: {Number(tracker.trackerEvent.get('temp_high')).toFixed(2)}</div>
+                </div>
+                <div style={{position: 'absolute', left: tracker.trackerX, top: '290px' }}>
+                    <div style={markerStyle}>Power: {Number(tracker.trackerEvent.get('heat_pwr')).toFixed(2)}</div>
+                </div>
+                <div style={{position: 'absolute', left: tracker.trackerX, top: '420px' }}>
+                    <div style={markerStyle}>Temp out: {Number(tracker.trackerEvent.get('temp_out')).toFixed(2)}</div>
+                </div>
+            </div>
+        : null }
         { activeQuery && <LinearProgress/>}
         <Resizable className={classes.rootContainer}>
         {/* <Button disabled={activeQuery}/>    */}
         <ChartContainer timeRange={series ? timerange: null} 
-                    title="Temperature statistics over the past month" 
-                    //format="day" 
-                    utc={false}
-                    //padding ={0}
-                    enablePanZoom={true}
-                    onTimeRangeChanged={handleTimeRangeChange}
-                    >
+            trackerPosition={tracker.tracker}
+            onTrackerChanged={handleTrackerChanged}
+            title="Temperature statistics over the past month" 
+            //format="day" 
+            utc={false}
+            //padding ={0}
+            enablePanZoom={true}
+            onTimeRangeChanged={handleTimeRangeChange}
+            >
             <ChartRow height="130">
                 <YAxis
                     id="temp_low"
-                    label="rate %"
+                    label="deg"
                     min={series.min("temp_low")}
                     max={series.max("temp_low")}
                     format=".2f"
@@ -142,7 +182,7 @@ export function ResultTimeChart(props) {    // user_id, hive_id,
             <ChartRow height="130">
                 <YAxis
                     id="temp_high"
-                    label="rate %"
+                    label="deg"
                     min={series.min("temp_high")}
                     max={series.max("temp_high")}
                     format=".2f"
@@ -156,38 +196,59 @@ export function ResultTimeChart(props) {    // user_id, hive_id,
                         spacing={5}
                         columns={["temp_high"]}
                         series={series}
-                        //radius={5.0}
+                        radius={5.0}
                     />
                 </Charts>
             </ChartRow>
             <ChartRow height="130">
                 <YAxis
                     id="heat_power"
-                    label="%"
-                    min={series.min("heat_pwr")}
+                    label="power %"
+                    min={0}
                     max={series.max("heat_pwr")}
                     format=".2f"
                     width="70"
                     type="linear"
                 />
                 <Charts>
-                    <LineChart
+                    {/* <LineChart
                         axis="heat_power"
                         //style={{success: {normal: {fill: "#e34d7d"}}}}
                         spacing={5}
                         columns={["heat_pwr"]}
                         series={series}
                         //radius={5.0}
-                    />
-                    {/* <BarChart
+                    /> */}
+                    <BarChart
                         axis="heat_power"
-                        //style={{success: {normal: {fill: "#e34d7d"}}}}
+                        style={{heat_pwr: {normal: {fill: "#e34d7d"}}}}
                         spacing={5}
                         columns={["heat_pwr"]}
                         //style={upDownStyle}
                         series={series}
                         //radius={5.0}
-                    /> */}
+                    />
+                </Charts>
+            </ChartRow>        
+            <ChartRow height="130">
+                <YAxis
+                    id="temp_out"
+                    label="deg"
+                    min={series.min("temp_out")}
+                    max={series.max("temp_out")}
+                    format=".2f"
+                    width="70"
+                    type="linear"
+                />
+                <Charts>
+                    <LineChart
+                        axis="temp_out"
+                        //style={{success: {normal: {fill: "#e34d7d"}}}}
+                        spacing={5}
+                        columns={["temp_out"]}
+                        series={series}
+                        radius={5.0}
+                    />
                 </Charts>
             </ChartRow>
         </ChartContainer>

@@ -15,8 +15,11 @@ const theme = createTheme({
       },
       secondary: {
           main: '#97295e', //151,41,94 lila
+      },
+      info: {
+          main: '#f2a327', //242, 163, 39 yellow
       }
-  }
+  }                          
 })
 
 export default function App() {
