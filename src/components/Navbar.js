@@ -4,7 +4,7 @@ import {AppBar, Toolbar, Typography, Button, IconButton,
 import SignupMenu from './SignupMenu'
 import { logout as hivedb_logout, refresh as hivedb_refresh } from '../api/hivedb';
 import { PersonOutline } from '@material-ui/icons';
-import MyLogo from '../pictures/bee_logo_v12.svg' ;
+import MyLogo from '../pictures/bee_logo_f4.svg' ;
 
 function parseToken(token) {
     try {
@@ -14,17 +14,17 @@ function parseToken(token) {
     }
 };
 
-export default function Navbar() {
+export default function Navbar({user, handleUserChange}) { //{... , user_id, user_name}
     const [menuAnchor, setMenuAnchor] = React.useState(null);
     const [snakMessage, setSnakMessage] = React.useState(null);
-    const [user, setUser] = React.useState(null); //{... , user_id, user_name}
+    // const [user, setUser] = React.useState(null); 
 
     useEffect( () => {
         if (! user) {
             if (! sessionStorage.getItem('refresh_token'))
                 return;
             hivedb_refresh().then( result => {
-                setUser( parseToken(result.data.refresh));
+                handleUserChange( parseToken(result.data.refresh));
             }).catch( err => setSnakMessage(err));
         }
     });
@@ -34,7 +34,7 @@ export default function Navbar() {
     }
     
     const handleLogoutClick = (event) => {
-        setUser(null);
+        handleUserChange(null);
         hivedb_logout();
     }
 
@@ -49,14 +49,6 @@ export default function Navbar() {
             // setUser({user_name: userInfo.user_name});
         }
     }
-    
-    /* const handleSignUpUser = (userInfo) => {
-        if (! userInfo.error) {
-            setMenuAnchor(null)
-            setSnakMessage("User created");
-            // setUser({user_name: userInfo.user_name});
-        }
-    } */
 
     const handleSnakClose = () => setSnakMessage(null);
 
@@ -95,8 +87,7 @@ export default function Navbar() {
                 :
                 <Button color="inherit" edge="final" onClick={handleLoginClick}>Login</Button>
             }
-            <SignupMenu open={Boolean(menuAnchor)} anchor={menuAnchor} 
-                handleFeedBack={handleFeedBack} handleClose={handleLoginClose}/>
+            <SignupMenu anchor={menuAnchor} handleFeedBack={handleFeedBack} handleClose={handleLoginClose}/>
             <Snackbar open={Boolean(snakMessage)} autoHideDuration={6000} 
                 onClose={handleSnakClose} message={snakMessage} 
                 anchorOrigin={{ vertical: "top", horizontal: "center" }}>            

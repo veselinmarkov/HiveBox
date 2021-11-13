@@ -23,16 +23,19 @@ const theme = createTheme({
 })
 
 export default function App() {
+  const [user, setUser] = React.useState(null);
+  
+  const handleUserChange = (user) => setUser(user)
 
   return (
     <ThemeProvider theme={theme}>
-      <Navbar/>
+      <Navbar user={user} handleUserChange={handleUserChange}/>
       <Router>
         <Route exact path="/">
           <FrontPage/>
         </Route>
         <Route path="/dash">
-          <Dashboard />
+          <Dashboard user={user}/>
         </Route>
       </Router>
     </ThemeProvider>

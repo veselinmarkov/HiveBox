@@ -35,11 +35,15 @@ const useStyles = makeStyles((theme) => ({
   }));
 
 export default function Control({id, unitList, handleIdChange}) {
-    // unitList: [
-    //    {id: 1, text: "Bio Unit #1"},
-    //    {id: 2, text: "Bio Unit #2"},
-    //    {id: 3, text: "Bio Unit #3"},
-    //]
+    /* 
+    id - current unit id;
+    unitList: [
+      {id: 1, text: "Bio Unit #1"},
+      {id: 2, text: "Bio Unit #2"},
+      {id: 3, text: "Bio Unit #3"},
+    ] ;
+    handleIdChange - handler to execute when unit id has changed;
+    */
     const classes = useStyles();
     
     const handleClick = (e) => {

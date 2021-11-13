@@ -19,17 +19,16 @@ const axiosInstance = axios.create({
     }
 });
 
-export async function getSamples(user_id, hive_id, timerange) {
-    if (! axiosInstance.defaults.headers['Authorization'] || ! user_id) {
+export async function getSamples(hive_id, timerange) {
+    if (! axiosInstance.defaults.headers['Authorization'] ) {
     //authorization header not present or no user specified, probably not logged in
-        // throw new Error({status: "401", statusText: "Not logged in"});
         throw new Error({status: "401", statusText: "Not logged in"});
     }
     // const errorResponse = null;
     let tryAgain = 3;
     while (tryAgain >0) {
         try {
-            return await axiosInstance.get('/api/samples/', { params: { user_id: user_id, sample1: timerange.begin(), 
+            return await axiosInstance.get('/api/samples/', { params: { sample1: timerange.begin(), 
             sample2: timerange.end(), hive: hive_id}});
         } catch (error) {
             // console.log(JSON.stringify(error));

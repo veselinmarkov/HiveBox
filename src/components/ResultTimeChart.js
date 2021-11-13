@@ -2,7 +2,7 @@
 import { makeStyles } from '@material-ui/core/styles';
 import { TimeSeries, Index, TimeRange } from 'pondjs';
 import React, { useState, useEffect } from 'react';
-import { LinearProgress, Typography } from '@material-ui/core';
+import { LinearProgress, Typography, Box } from '@material-ui/core';
 import {
     Charts,
     ChartContainer,
@@ -22,7 +22,9 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-export function ResultTimeChart(props) {    // user_id, hive_id, 
+// let timerange = new TimeRange(new Date('2020-01-03T08:00:00'), new Date('2020-01-03T09:00:00'));
+
+export function ResultTimeChart({hive_id}) {    // user_id, hive_id, 
     const classes = useStyles();
     //new TimeRange(date.setFullYear( date.getFullYear() - 1 ) , new Date())
     const [timerange, setTimerange] = useState(new TimeRange(new Date('2020-01-03T08:00:00'), new Date('2020-01-03T09:00:00')));
@@ -30,16 +32,17 @@ export function ResultTimeChart(props) {    // user_id, hive_id,
     const [tracker, setTracker] = React.useState({tracker: null, trackerEvent: null, trackerX: null});
     const [activeDelay, setActiveDelay] = useState(false)
     const [activeQuery, setActiveQuery] = useState(false)
-    const user_id = props.user_id;
-    const hive_id = props.hive_id;
+    // const user_id = props.user_id;
+    // const hive_id = props.hive_id;
     //let series = {}
 
     useEffect( () => {
-        console.log('Effect invoked', activeDelay);
-        if (! activeDelay) {
+        if (activeDelay) 
         // do not access server until delay in progress
+            return;
+        console.log('Effect invoked');
         setActiveQuery(true);
-        getSamples(user_id, hive_id, timerange).then((retData) => {
+        getSamples(hive_id, timerange).then((retData) => {
             //updataData = false;
             setData(retData.data.data);
             setActiveQuery(false);
@@ -48,8 +51,7 @@ export function ResultTimeChart(props) {    // user_id, hive_id,
             setData(null);
             setActiveQuery(false);
         })
-        }
-      }, [user_id, hive_id, activeDelay]);
+      }, [hive_id, activeDelay, timerange]);
 
     if (! data || data.length === 0)
         return (<h2>No data</h2>);
@@ -92,12 +94,13 @@ export function ResultTimeChart(props) {    // user_id, hive_id,
 
     //console.log(series.min("temp_high"), series.max("temp_high"));
 
-    const handleTimeRangeChange = timerange => {
-        setTimerange(timerange);
+    const handleTimeRangeChange = newTimerange => {
+        setTimerange(newTimerange);
+        //timerange = newTimerange;
         if (! activeDelay) {
-            console.log('Set Active delay true and start the timer');
+            // console.log('Set Active delay true and start the timer');
             setActiveDelay(true);
-            setTimeout(() => { setActiveDelay(false)}, 500)
+            setTimeout(() => { setActiveDelay(false)}, 1000)
         }
         //console.log(timerange);
     };
@@ -140,7 +143,9 @@ export function ResultTimeChart(props) {    // user_id, hive_id,
                 </div>
             </div>
         : null }
-        { activeQuery && <LinearProgress/>}
+        <Box sx={{minHeight:5}}>
+            { activeQuery && <LinearProgress/>}
+        </Box>
         <Resizable className={classes.rootContainer}>
         {/* <Button disabled={activeQuery}/>    */}
         <ChartContainer timeRange={series ? timerange: null} 

@@ -36,9 +36,9 @@ const useStyles = makeStyles((theme) => ({
 
 //var updataData = true;
 
-export default function Dashboard() {
+export default function Dashboard({user}) { //current user: {user_id, user_name}
   // const [user, setUser] = React.useState({ id:"Guest" });
-  const [id, setId] = React.useState(2);
+  const [id, setId] = React.useState(0); // unit id
   // const [data, setData] = React.useState([]);
   const classes = useStyles();
 
@@ -69,6 +69,8 @@ export default function Dashboard() {
         {id: 9, text: "Bio Unit #9"},
     ]
   
+  const allowedList = user && user.user_name ==="reader" ? testUnitList : [];  
+
   /* const testSamples = [
     {"hive":1,"sample_time":"2020-06-01T00:00:00.000Z","temp_low":"19.353","temp_high":0,"temp_hot":"22.470","temp_out":13,"temp_target":"-10.000","humi_in":"71.77","humi_out":null,"heat_pwr":null,"fan":746,"mode":"monitor","heater_breakers":10},
     {"hive":1,"sample_time":"2020-06-01T01:00:00.000Z","temp_low":"19.008","temp_high":null,"temp_hot":"22.215","temp_out":13,"temp_target":"-10.000","humi_in":"72.41","humi_out":null,"heat_pwr":10,"fan":746,"mode":"monitor","heater_breakers":10},
@@ -86,7 +88,7 @@ export default function Dashboard() {
       <CssBaseline />
       {/* <Navbar user={user} updateUser={handleUser}/> */}
       <Grid container className={classes.container} spacing={1}>
-          <Control id={id} unitList={testUnitList} handleIdChange={handleIdChange}/>
+          <Control id={id} unitList={allowedList} handleIdChange={handleIdChange}/>
         <Grid item className={classes.main}>
           <Paper className={classes.mainPaper}>
             {/*<img alt="Beehive" src={MyImage}/>*/}

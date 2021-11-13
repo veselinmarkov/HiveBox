@@ -22,7 +22,7 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-export default function SignupMenu(props) { //open, anchor, handleSignup, handleClose
+export default function SignupMenu({anchor, handleFeedBack, handleClose}) {
     const [firstName, setFirstName ] = React.useState("");
     const [lastName, setLastName ] = React.useState("");
     const [email, setEmail ] = React.useState("");
@@ -34,11 +34,10 @@ export default function SignupMenu(props) { //open, anchor, handleSignup, handle
     const [showError1, setShowError1 ] = React.useState("");
     const [showError2, setShowError2 ] = React.useState("");
     const classes = useStyles();
-    //const open = Boolean(props.anchor);
 
-    if (! props.handleFeedBack || ! props.handleClose)
+    /* if (! props.handleFeedBack || ! props.handleClose)
         throw Error('Property handleFeedBack and handleClose are required!')
-
+ */
     const handleSignUp = async () => {
         if (! username2 || ! password2) {
             setShowError2('Please, provide Username and Password for Signing up');
@@ -49,14 +48,14 @@ export default function SignupMenu(props) { //open, anchor, handleSignup, handle
         }
         let response = await signUp(firstName, lastName, email, username2, password2);
         if (response.error) {
-            if (response.status == 400)
+            if (response.status === "400")
                 setShowError2('The user name already exists; ' +response.error);
             else
                 setShowError2(response.error);
             return;
         }
         response = await login(username2, password2);
-        props.handleFeedBack("User created", response.error);
+        handleFeedBack("User created", response.error);
         if (response.error) {
             setShowError2(response.error);
             return;
@@ -76,9 +75,9 @@ export default function SignupMenu(props) { //open, anchor, handleSignup, handle
             return
         }
         const response = await login(username1, password1);
-        props.handleFeedBack("Login successfull", response.error)
+        handleFeedBack("Login successfull", response.error)
         if (response.error)
-            if (response.status ==401)
+            if (response.status ==="401")
                 setShowError1('Invalid credentials. Incorrect User or password; ' +response.error);
             else
                 setShowError1(response.error);
@@ -89,10 +88,10 @@ export default function SignupMenu(props) { //open, anchor, handleSignup, handle
         }
     }
 
-    const handleClose = () => {
+    const handleLocalClose = () => {
         setShowError1('');
         setShowError2('');
-        props.handleClose();
+        handleClose();
     }
 
     const handleFirstName = e => setFirstName(e.target.value);
@@ -106,9 +105,9 @@ export default function SignupMenu(props) { //open, anchor, handleSignup, handle
     return (
         <Popover
             id="popper"
-            open={props.open}
-            anchorEl={props.anchor}
-            onClose={handleClose}
+            open={Boolean(anchor)}
+            anchorEl={anchor}
+            onClose={handleLocalClose}
             anchorOrigin={{
                 vertical: 'bottom',
                 horizontal: 'center',
